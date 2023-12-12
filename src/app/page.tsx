@@ -1,113 +1,447 @@
-import Image from 'next/image'
+"use client";
 
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+import { useRef, useState } from "react";
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+    TimeScale,
+    ChartOptions,
+    ChartData,
+} from "chart.js";
+import { faker } from "@faker-js/faker";
+import { Line } from "react-chartjs-2";
+import annotationPlugin from "chartjs-plugin-annotation";
+require("chartjs-adapter-moment");
+import moment from "moment";
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    TimeScale,
+    Title,
+    Tooltip,
+    Legend,
+    annotationPlugin
+);
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+// const LineChartWithComments = () => {
+//     const [comments, setComments] = useState([]);
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+//     const handleChartClick = (elements) => {
+//         console.log(elements);
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
+//         // if (elements && elements.length > 0) {
+//         //     const element = elements[0];
+//         //     const datasetIndex = element._datasetIndex;
+//         //     const index = element._index;
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+//         //     const xValue = element.chart.data.labels[index];
+//         //     const yValue =
+//         //         element.chart.data.datasets[datasetIndex].data[index];
+
+//         //     // Open a modal or form to input and save the comment
+//         //     const comment = prompt("Add a comment:");
+//         //     if (comment) {
+//         //         // Update state or data with the comment
+//         //         const newComment = { x: xValue, y: yValue, text: comment };
+//         //         setComments((prevComments) => [...prevComments, newComment]);
+//         //     }
+//         // }
+//     };
+
+//     const chartData = {
+//         labels: ["January", "February", "March", "April", "May"],
+//         datasets: [
+//             {
+//                 label: "My Dataset",
+//                 data: [10, 20, 30, 40, 50],
+//             },
+//         ],
+//     };
+
+//     const chartOptions = {
+//         onClick: (_, elements) => handleChartClick(elements),
+//         // other chart options...
+//     };
+
+//     return (
+//         <div>
+//             <Line data={chartData} options={chartOptions} />
+//             {/* Render comments on the chart */}
+//             {comments.map((comment, index) => (
+//                 <div
+//                     key={index}
+//                     style={{
+//                         position: "absolute",
+//                         left: comment.x,
+//                         top: comment.y,
+//                     }}
+//                 >
+//                     {comment.text}
+//                 </div>
+//             ))}
+//         </div>
+//     );
+// };
+
+// export default LineChartWithComments;
+
+export default function App() {
+    const [xValue, setXValue] = useState(null);
+    const [yValue, setYValue] = useState(null);
+
+    const chartRef: any = useRef();
+
+    const labels = [100, 400, 700];
+
+    const data: ChartData = {
+        labels,
+        datasets: [
+            {
+                label: "Sajjad",
+                fill: false,
+                tension: 0.3,
+                backgroundColor: "rgba(75,192,192,0.4)",
+                borderColor: "rgba(75,192,192,1)",
+                borderCapStyle: "butt",
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: "miter",
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                data: [
+                    { x: 100, y: 35 },
+                    { x: 400, y: 18 },
+                    { x: 700, y: 70 },
+                ],
+                spanGaps: false,
+            },
+            {
+                label: "Ali",
+                data: [
+                    { x: 100, y: 20 },
+                    { x: 400, y: 50 },
+                    { x: 700, y: 10 },
+                ],
+                spanGaps: false,
+                fill: false,
+                tension: 0.3,
+                backgroundColor: "rgba(75,192,192,0.4)",
+                borderColor: "rgba(75,192,192,1)",
+                borderCapStyle: "butt",
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: "miter",
+                pointBorderColor: "rgba(75,192,192,1)",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "rgba(75,192,192,1)",
+                pointHoverBorderColor: "rgba(220,220,220,1)",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+            },
+        ],
+    };
+
+    const options: ChartOptions = {
+        onClick: function (event, elementsAtEvent) {
+            // console.log(event, elementsAtEvent, chartRef?.current);
+            let valueX1 = null,
+                valueY1 = null;
+            // console.log(event);
+            for (let scaleName in chartRef?.current.scales) {
+                let scale = chartRef?.current.scales[scaleName];
+                if (!scale.isHorizontal()) {
+                    valueY1 = scale.getValueForPixel(event.y);
+                } else {
+                    valueX1 = scale.getValueForPixel(event.x);
+                }
+            }
+            setXValue(valueX1);
+            setYValue(valueY1);
+            console.log(event.x, valueX1, null, event.y, valueY1);
+        },
+        responsive: true,
+        plugins: {
+            // tooltip: {
+            //     enabled: false,
+            //     intersect: false,
+            //     callbacks: {
+            //         label: function (context) {
+            //             let label = data.labels[context.datasetIndex];
+            //             return (
+            //                 label +
+            //                 ",  " +
+            //                 context.parsed.x +
+            //                 ",  " +
+            //                 context.parsed.y +
+            //                 "<br />" +
+            //                 "hi"
+            //             );
+            //         },
+            //     },
+            //     external: function (context) {
+            //         let tooltipModel = context.tooltip;
+            //         // Tooltip Element
+            //         let tooltipEl = document.getElementById("chartjs-tooltip");
+
+            //         // Create element on first render
+            //         if (!tooltipEl) {
+            //             tooltipEl = document.createElement("div");
+            //             tooltipEl.id = "chartjs-tooltip";
+            //             tooltipEl.innerHTML = "<table></table>";
+            //             // tooltipEl.classList.add("scrollbar");
+            //             document.body.appendChild(tooltipEl);
+            //         }
+
+            //         function getBody(bodyItem) {
+            //             return bodyItem.lines;
+            //         }
+
+            //         // Set Text
+            //         if (tooltipModel.body) {
+            //             let titleLines = tooltipModel.title || [];
+            //             let bodyLines = tooltipModel.body.map(getBody);
+
+            //             let innerHtml = "<thead>";
+
+            //             titleLines.forEach(function (title) {
+            //                 innerHtml += "<tr><th>" + title + "</th></tr>";
+            //             });
+            //             innerHtml += "</thead><tbody >";
+
+            //             bodyLines.forEach(function (body, i) {
+            //                 let colors = tooltipModel.labelColors[i];
+            //                 let style = "background:" + colors.backgroundColor;
+            //                 style += "; border-color:" + colors.borderColor;
+            //                 style += "; border-width: 2px !important";
+            //                 style += "; width: 10px !important";
+            //                 style += "; height: 10px !important";
+            //                 style += "; display: inline-block !important";
+            //                 style += "; margin-right: 3px !important";
+            //                 let box = `<span style="${style}"></span>`;
+            //                 innerHtml += `<tr><td>${box}${body}</td></tr>`;
+            //             });
+            //             innerHtml += "</tbody>";
+
+            //             let tableRoot = tooltipEl.querySelector("table");
+            //             tableRoot.innerHTML = innerHtml;
+            //         }
+
+            //         // `this` will be the overall tooltip
+            //         let position = this.chart.canvas.getBoundingClientRect();
+
+            //         // Display, position, and set styles for font
+            //         tooltipEl.style.position = "absolute";
+            //         tooltipEl.style.left =
+            //             position.left +
+            //             window.pageXOffset +
+            //             tooltipModel.caretX +
+            //             "px";
+            //         tooltipEl.style.top =
+            //             position.top +
+            //             window.pageYOffset +
+            //             tooltipModel.caretY +
+            //             "px";
+            //         tooltipEl.style.padding =
+            //             tooltipModel.yPadding +
+            //             "px " +
+            //             tooltipModel.xPadding +
+            //             "px";
+            //         // tooltipEl.style.pointerEvents = 'none'; // Use when need to stop mouse events such as Onhover and Scrolling
+            //         tooltipEl.style.border = "2px solid blue";
+            //         tooltipEl.style.borderColor = "blue";
+            //         tooltipEl.style.borderRadius = "4px";
+            //         tooltipEl.style.backgroundColor = "white";
+            //         tooltipEl.style.maxHeight = "100px";
+            //         tooltipEl.style.overflowY = "auto";
+            //         tooltipEl.style.scrollBehavior = "smooth";
+            //     },
+            // },
+            legend: {
+                position: "bottom",
+                align: "start",
+            },
+            annotation: {
+                annotations: {
+                    point1: {
+                        type: "point",
+                        xValue: xValue,
+                        yValue: yValue,
+                        backgroundColor: "rgba(75,192,192,0.25)",
+                        borderWidth: 2,
+                        borderColor: "rgba(75,192,192,1)",
+                        radius: 7,
+                    },
+                },
+            },
+            title: {
+                display: true,
+                text: "Chart.js Line Chart",
+            },
+        },
+    };
+
+    return (
+        <main className="w-full md:w-1/2 h-1/2 p-5 mt-10">
+            <Line options={options} ref={chartRef} data={data} />
+        </main>
+    );
 }
+
+// export default function App() {
+//     const chartRef: any = useRef();
+
+//     function randomScalingFactor() {
+//         return Math.round(Math.random() * 100 * (Math.random() > 0.5 ? -1 : 1));
+//     }
+
+//     function randomColorFactor() {
+//         return Math.round(Math.random() * 255);
+//     }
+
+//     function randomColor(opacity) {
+//         return (
+//             "rgba(" +
+//             randomColorFactor() +
+//             "," +
+//             randomColorFactor() +
+//             "," +
+//             randomColorFactor() +
+//             "," +
+//             (opacity || ".3") +
+//             ")"
+//         );
+//     }
+
+//     function newDate(days) {
+//         return moment().add(days, "d").toDate();
+//     }
+
+//     function newDateString(days) {
+//         return moment().add(days, "d").format();
+//     }
+
+//     var config = {
+//         data: {
+//             datasets: [
+//                 {
+//                     label: "Dataset with string point data",
+//                     data: [
+//                         {
+//                             x: newDateString(0),
+//                             y: randomScalingFactor(),
+//                         },
+//                         {
+//                             x: newDateString(2),
+//                             y: randomScalingFactor(),
+//                         },
+//                         {
+//                             x: newDateString(4),
+//                             y: randomScalingFactor(),
+//                         },
+//                         {
+//                             x: newDateString(5),
+//                             y: randomScalingFactor(),
+//                         },
+//                     ],
+//                     fill: false,
+//                 },
+//                 {
+//                     label: "Dataset with date object point data",
+//                     data: [
+//                         {
+//                             x: newDate(0),
+//                             y: randomScalingFactor(),
+//                         },
+//                         {
+//                             x: newDate(2),
+//                             y: randomScalingFactor(),
+//                         },
+//                         {
+//                             x: newDate(4),
+//                             y: randomScalingFactor(),
+//                         },
+//                         {
+//                             x: newDate(5),
+//                             y: randomScalingFactor(),
+//                         },
+//                     ],
+//                     fill: false,
+//                 },
+//             ],
+//         },
+//         options: {
+//             onClick: function (event, elementsAtEvent) {
+//                 // console.log(event, elementsAtEvent, chartRef?.current);
+//                 let valueX = null,
+//                     valueY = null;
+//                 for (let scaleName in chartRef?.current.scales) {
+//                     let scale = chartRef?.current.scales[scaleName];
+//                     // console.log(event);
+
+//                     if (scale.axis === "x") {
+//                         valueX = scale.getValueForPixel(event.x);
+//                     } else {
+//                         valueY = scale.getValueForPixel(event.y);
+//                     }
+//                 }
+//                 console.log(event.offsetX, valueX, null, event.offsetY, valueY);
+//             },
+//             responsive: true,
+//             title: {
+//                 display: true,
+//                 text: "Chart.js Time Point Data",
+//             },
+//             scales: {
+//                 xAxes: {
+//                     type: "time",
+//                     display: true,
+//                     scaleLabel: {
+//                         display: true,
+//                         labelString: "Date",
+//                     },
+//                 },
+
+//                 yAxes: {
+//                     display: true,
+//                     scaleLabel: {
+//                         display: true,
+//                         labelString: "value",
+//                     },
+//                 },
+//             },
+//         },
+//     };
+
+//     config.data.datasets.forEach(function (dataset) {
+//         dataset.borderColor = randomColor(0.4);
+//         dataset.backgroundColor = randomColor(0.5);
+//         dataset.pointBorderColor = randomColor(0.7);
+//         dataset.pointBackgroundColor = randomColor(0.5);
+//         dataset.pointBorderWidth = 1;
+//     });
+
+//     return (
+//         <main className="w-full md:w-1/2 h-1/2 p-5 mt-10">
+//             <Line options={config.options} ref={chartRef} data={config.data} />
+//         </main>
+//     );
+// }
