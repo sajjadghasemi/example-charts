@@ -1,36 +1,32 @@
 "use client";
 
 import { useRef, useState } from "react";
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-    TimeScale,
-    ChartOptions,
-    ChartData,
-} from "chart.js";
-import { faker } from "@faker-js/faker";
-import { Line } from "react-chartjs-2";
-import annotationPlugin from "chartjs-plugin-annotation";
-require("chartjs-adapter-moment");
-import moment from "moment";
+// import {
+//   Chart as ChartJS,
+//   CategoryScale,
+//   LinearScale,
+//   PointElement,
+//   LineElement,
+//   Title,
+//   Tooltip,
+//   Legend,
+//   TimeScale,
+// } from "chart.js";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+import Annotations from "highcharts/modules/annotations";
+Annotations(Highcharts);
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    TimeScale,
-    Title,
-    Tooltip,
-    Legend,
-    annotationPlugin
-);
+// ChartJS.register(
+//   CategoryScale,
+//   LinearScale,
+//   PointElement,
+//   LineElement,
+//   TimeScale,
+//   Title,
+//   Tooltip,
+//   Legend
+// );
 
 // const LineChartWithComments = () => {
 //     const [comments, setComments] = useState([]);
@@ -95,215 +91,318 @@ ChartJS.register(
 // export default LineChartWithComments;
 
 export default function App() {
-    const [xValue, setXValue] = useState(null);
-    const [yValue, setYValue] = useState(null);
+  const [xValue, setXValue] = useState(null);
+  const [yValue, setYValue] = useState(null);
+  const [position, setPosition] = useState<{
+    x: number;
+    y: number;
+  }>({ x: -1, y: -1 });
+  console.log(position);
 
-    const chartRef: any = useRef();
+  const chartRef: any = useRef();
 
-    const labels = [100, 400, 700];
+  const labels = [100, 200, 300, 400, 500, 600, 700];
 
-    const data: ChartData = {
-        labels,
-        datasets: [
-            {
-                label: "Sajjad",
-                fill: false,
-                tension: 0.3,
-                backgroundColor: "rgba(75,192,192,0.4)",
-                borderColor: "rgba(75,192,192,1)",
-                borderCapStyle: "butt",
-                borderDash: [],
-                borderDashOffset: 0.0,
-                borderJoinStyle: "miter",
-                pointBorderColor: "rgba(75,192,192,1)",
-                pointBackgroundColor: "#fff",
-                pointBorderWidth: 1,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                pointHoverBorderColor: "rgba(220,220,220,1)",
-                pointHoverBorderWidth: 2,
-                pointRadius: 1,
-                pointHitRadius: 10,
-                data: [
-                    { x: 100, y: 35 },
-                    { x: 400, y: 18 },
-                    { x: 700, y: 70 },
-                ],
-                spanGaps: false,
-            },
-            {
-                label: "Ali",
-                data: [
-                    { x: 100, y: 20 },
-                    { x: 400, y: 50 },
-                    { x: 700, y: 10 },
-                ],
-                spanGaps: false,
-                fill: false,
-                tension: 0.3,
-                backgroundColor: "rgba(75,192,192,0.4)",
-                borderColor: "rgba(75,192,192,1)",
-                borderCapStyle: "butt",
-                borderDash: [],
-                borderDashOffset: 0.0,
-                borderJoinStyle: "miter",
-                pointBorderColor: "rgba(75,192,192,1)",
-                pointBackgroundColor: "#fff",
-                pointBorderWidth: 1,
-                pointHoverRadius: 5,
-                pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                pointHoverBorderColor: "rgba(220,220,220,1)",
-                pointHoverBorderWidth: 2,
-                pointRadius: 1,
-                pointHitRadius: 10,
-            },
+  // const data: ChartData = {
+  //   labels,
+  //   datasets: [
+  //     {
+  //       label: "Sajjad",
+  //       fill: false,
+  //       tension: 0.3,
+  //       backgroundColor: "rgba(75,192,192,0.4)",
+  //       borderColor: "rgba(75,192,192,1)",
+  //       borderCapStyle: "butt",
+  //       borderDash: [],
+  //       borderDashOffset: 0.0,
+  //       borderJoinStyle: "miter",
+  //       pointBorderColor: "rgba(75,192,192,1)",
+  //       pointBackgroundColor: "#fff",
+  //       pointBorderWidth: 1,
+  //       pointHoverRadius: 5,
+  //       pointHoverBackgroundColor: "rgba(75,192,192,1)",
+  //       pointHoverBorderColor: "rgba(220,220,220,1)",
+  //       pointHoverBorderWidth: 2,
+  //       pointRadius: 1,
+  //       pointHitRadius: 10,
+  //       data: [10, 50, 68, 45, 15, 25, 60],
+  //       spanGaps: false,
+  //     },
+  //     {
+  //       label: "Ali",
+  //       data: [60, 30, 40, 65, 20, 35, 50],
+  //       spanGaps: false,
+  //       fill: false,
+  //       tension: 0.3,
+  //       backgroundColor: "rgba(75,192,192,0.4)",
+  //       borderColor: "red",
+  //       borderCapStyle: "butt",
+  //       borderDash: [],
+  //       borderDashOffset: 0.0,
+  //       borderJoinStyle: "miter",
+  //       pointBorderColor: "red",
+  //       pointBackgroundColor: "#fff",
+  //       pointBorderWidth: 1,
+  //       pointHoverRadius: 5,
+  //       pointHoverBackgroundColor: "red",
+  //       pointHoverBorderColor: "rgba(220,220,220,1)",
+  //       pointHoverBorderWidth: 2,
+  //       pointRadius: 1,
+  //       pointHitRadius: 10,
+  //     },
+  //   ],
+  // };
+
+  // const options: ChartOptions = {
+  //   onClick: function (event, elementsAtEvent) {
+  //     // console.log(event, elementsAtEvent, chartRef?.current);
+  //     let valueX1 = null,
+  //       valueY1 = null;
+  //     // console.log(event);
+  //     for (let scaleName in chartRef?.current.scales) {
+  //       let scale = chartRef?.current.scales[scaleName];
+  //       if (!scale.isHorizontal()) {
+  //         valueY1 = scale.getValueForPixel(event.y);
+  //       } else {
+  //         valueX1 = scale.getValueForPixel(event.x);
+  //       }
+  //     }
+  //     setXValue(valueX1);
+  //     setYValue(valueY1);
+  //     console.log(event.x, valueX1, null, event.y, valueY1);
+  //   },
+  //   responsive: true,
+  //   plugins: {
+  //     // tooltip: {
+  //     //     enabled: false,
+  //     //     intersect: false,
+  //     //     callbacks: {
+  //     //         label: function (context) {
+  //     //             let label = data.labels[context.datasetIndex];
+  //     //             return (
+  //     //                 label +
+  //     //                 ",  " +
+  //     //                 context.parsed.x +
+  //     //                 ",  " +
+  //     //                 context.parsed.y +
+  //     //                 "<br />" +
+  //     //                 "hi"
+  //     //             );
+  //     //         },
+  //     //     },
+  //     //     external: function (context) {
+  //     //         let tooltipModel = context.tooltip;
+  //     //         // Tooltip Element
+  //     //         let tooltipEl = document.getElementById("chartjs-tooltip");
+
+  //     //         // Create element on first render
+  //     //         if (!tooltipEl) {
+  //     //             tooltipEl = document.createElement("div");
+  //     //             tooltipEl.id = "chartjs-tooltip";
+  //     //             tooltipEl.innerHTML = "<table></table>";
+  //     //             // tooltipEl.classList.add("scrollbar");
+  //     //             document.body.appendChild(tooltipEl);
+  //     //         }
+
+  //     //         function getBody(bodyItem) {
+  //     //             return bodyItem.lines;
+  //     //         }
+
+  //     //         // Set Text
+  //     //         if (tooltipModel.body) {
+  //     //             let titleLines = tooltipModel.title || [];
+  //     //             let bodyLines = tooltipModel.body.map(getBody);
+
+  //     //             let innerHtml = "<thead>";
+
+  //     //             titleLines.forEach(function (title) {
+  //     //                 innerHtml += "<tr><th>" + title + "</th></tr>";
+  //     //             });
+  //     //             innerHtml += "</thead><tbody >";
+
+  //     //             bodyLines.forEach(function (body, i) {
+  //     //                 let colors = tooltipModel.labelColors[i];
+  //     //                 let style = "background:" + colors.backgroundColor;
+  //     //                 style += "; border-color:" + colors.borderColor;
+  //     //                 style += "; border-width: 2px !important";
+  //     //                 style += "; width: 10px !important";
+  //     //                 style += "; height: 10px !important";
+  //     //                 style += "; display: inline-block !important";
+  //     //                 style += "; margin-right: 3px !important";
+  //     //                 let box = `<span style="${style}"></span>`;
+  //     //                 innerHtml += `<tr><td>${box}${body}</td></tr>`;
+  //     //             });
+  //     //             innerHtml += "</tbody>";
+
+  //     //             let tableRoot = tooltipEl.querySelector("table");
+  //     //             tableRoot.innerHTML = innerHtml;
+  //     //         }
+
+  //     //         // `this` will be the overall tooltip
+  //     //         let position = this.chart.canvas.getBoundingClientRect();
+
+  //     //         // Display, position, and set styles for font
+  //     //         tooltipEl.style.position = "absolute";
+  //     //         tooltipEl.style.left =
+  //     //             position.left +
+  //     //             window.pageXOffset +
+  //     //             tooltipModel.caretX +
+  //     //             "px";
+  //     //         tooltipEl.style.top =
+  //     //             position.top +
+  //     //             window.pageYOffset +
+  //     //             tooltipModel.caretY +
+  //     //             "px";
+  //     //         tooltipEl.style.padding =
+  //     //             tooltipModel.yPadding +
+  //     //             "px " +
+  //     //             tooltipModel.xPadding +
+  //     //             "px";
+  //     //         // tooltipEl.style.pointerEvents = 'none'; // Use when need to stop mouse events such as Onhover and Scrolling
+  //     //         tooltipEl.style.border = "2px solid blue";
+  //     //         tooltipEl.style.borderColor = "blue";
+  //     //         tooltipEl.style.borderRadius = "4px";
+  //     //         tooltipEl.style.backgroundColor = "white";
+  //     //         tooltipEl.style.maxHeight = "100px";
+  //     //         tooltipEl.style.overflowY = "auto";
+  //     //         tooltipEl.style.scrollBehavior = "smooth";
+  //     //     },
+  //     // },
+  //     legend: {
+  //       position: "bottom",
+  //       align: "start",
+  //     },
+  //     annotation: {
+  //       annotations: {
+  //         point1: {
+  //           type: "point",
+  //           xValue: xValue,
+  //           yValue: yValue,
+  //           backgroundColor: "rgba(75,192,192,0.25)",
+  //           borderWidth: 2,
+  //           borderColor: "red",
+  //           radius: 7,
+  //         },
+  //       },
+  //     },
+  //     title: {
+  //       display: true,
+  //       text: "Chart.js Line Chart",
+  //     },
+  //   },
+  // };
+
+  const options1: Highcharts.Options = {
+    title: {
+      text: "My chart",
+    },
+    series: [
+      {
+        type: "spline",
+        data: [
+          {
+            x: 1,
+            y: 3,
+          },
+          {
+            x: 1.5,
+            y: 4,
+          },
+          {
+            x: 2,
+            y: 1,
+          },
+          {
+            x: 2.5,
+            y: 2,
+          },
         ],
-    };
+      },
+    ],
 
-    const options: ChartOptions = {
-        onClick: function (event, elementsAtEvent) {
-            // console.log(event, elementsAtEvent, chartRef?.current);
-            let valueX1 = null,
-                valueY1 = null;
-            // console.log(event);
-            for (let scaleName in chartRef?.current.scales) {
-                let scale = chartRef?.current.scales[scaleName];
-                if (!scale.isHorizontal()) {
-                    valueY1 = scale.getValueForPixel(event.y);
-                } else {
-                    valueX1 = scale.getValueForPixel(event.x);
-                }
-            }
-            setXValue(valueX1);
-            setYValue(valueY1);
-            console.log(event.x, valueX1, null, event.y, valueY1);
+    chart: {
+      events: {
+        click: function (event: any) {
+          setPosition({
+            x: Number(Highcharts.numberFormat(event.xAxis[0].value, 2)),
+            y: Number(Highcharts.numberFormat(event.yAxis[0].value, 2)),
+          });
         },
-        responsive: true,
-        plugins: {
-            // tooltip: {
-            //     enabled: false,
-            //     intersect: false,
-            //     callbacks: {
-            //         label: function (context) {
-            //             let label = data.labels[context.datasetIndex];
-            //             return (
-            //                 label +
-            //                 ",  " +
-            //                 context.parsed.x +
-            //                 ",  " +
-            //                 context.parsed.y +
-            //                 "<br />" +
-            //                 "hi"
-            //             );
-            //         },
-            //     },
-            //     external: function (context) {
-            //         let tooltipModel = context.tooltip;
-            //         // Tooltip Element
-            //         let tooltipEl = document.getElementById("chartjs-tooltip");
+      },
+    },
 
-            //         // Create element on first render
-            //         if (!tooltipEl) {
-            //             tooltipEl = document.createElement("div");
-            //             tooltipEl.id = "chartjs-tooltip";
-            //             tooltipEl.innerHTML = "<table></table>";
-            //             // tooltipEl.classList.add("scrollbar");
-            //             document.body.appendChild(tooltipEl);
-            //         }
-
-            //         function getBody(bodyItem) {
-            //             return bodyItem.lines;
-            //         }
-
-            //         // Set Text
-            //         if (tooltipModel.body) {
-            //             let titleLines = tooltipModel.title || [];
-            //             let bodyLines = tooltipModel.body.map(getBody);
-
-            //             let innerHtml = "<thead>";
-
-            //             titleLines.forEach(function (title) {
-            //                 innerHtml += "<tr><th>" + title + "</th></tr>";
-            //             });
-            //             innerHtml += "</thead><tbody >";
-
-            //             bodyLines.forEach(function (body, i) {
-            //                 let colors = tooltipModel.labelColors[i];
-            //                 let style = "background:" + colors.backgroundColor;
-            //                 style += "; border-color:" + colors.borderColor;
-            //                 style += "; border-width: 2px !important";
-            //                 style += "; width: 10px !important";
-            //                 style += "; height: 10px !important";
-            //                 style += "; display: inline-block !important";
-            //                 style += "; margin-right: 3px !important";
-            //                 let box = `<span style="${style}"></span>`;
-            //                 innerHtml += `<tr><td>${box}${body}</td></tr>`;
-            //             });
-            //             innerHtml += "</tbody>";
-
-            //             let tableRoot = tooltipEl.querySelector("table");
-            //             tableRoot.innerHTML = innerHtml;
-            //         }
-
-            //         // `this` will be the overall tooltip
-            //         let position = this.chart.canvas.getBoundingClientRect();
-
-            //         // Display, position, and set styles for font
-            //         tooltipEl.style.position = "absolute";
-            //         tooltipEl.style.left =
-            //             position.left +
-            //             window.pageXOffset +
-            //             tooltipModel.caretX +
-            //             "px";
-            //         tooltipEl.style.top =
-            //             position.top +
-            //             window.pageYOffset +
-            //             tooltipModel.caretY +
-            //             "px";
-            //         tooltipEl.style.padding =
-            //             tooltipModel.yPadding +
-            //             "px " +
-            //             tooltipModel.xPadding +
-            //             "px";
-            //         // tooltipEl.style.pointerEvents = 'none'; // Use when need to stop mouse events such as Onhover and Scrolling
-            //         tooltipEl.style.border = "2px solid blue";
-            //         tooltipEl.style.borderColor = "blue";
-            //         tooltipEl.style.borderRadius = "4px";
-            //         tooltipEl.style.backgroundColor = "white";
-            //         tooltipEl.style.maxHeight = "100px";
-            //         tooltipEl.style.overflowY = "auto";
-            //         tooltipEl.style.scrollBehavior = "smooth";
-            //     },
-            // },
-            legend: {
-                position: "bottom",
-                align: "start",
-            },
-            annotation: {
-                annotations: {
-                    point1: {
-                        type: "point",
-                        xValue: xValue,
-                        yValue: yValue,
-                        backgroundColor: "rgba(75,192,192,0.25)",
-                        borderWidth: 2,
-                        borderColor: "rgba(75,192,192,1)",
-                        radius: 7,
-                    },
-                },
-            },
-            title: {
-                display: true,
-                text: "Chart.js Line Chart",
-            },
+    annotations: [
+      {
+        shapeOptions: {
+          type: "path",
+          dashStyle: "Solid",
+          strokeWidth: 3,
+          stroke: "red",
+          fill: "red",
         },
-    };
+        shapes: [
+          {
+            type: "path",
+            points: [
+              {
+                x: 1,
+                y: 3,
+                xAxis: 0,
+                yAxis: 0,
+              },
+              {
+                x: 2,
+                y: 5,
+                xAxis: 0,
+                yAxis: 0,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        events: {
+          click: function (event) {
+            event?.stopPropagation();
+          },
+        },
+        labels: [
+          {
+            point: {
+              x: position.x,
+              y: position.y,
+              xAxis: 0,
+              yAxis: 0,
+            },
+            text: "x: {x}<br/>y: {y}",
+          },
+        ],
+        labelOptions: {
+          x: 40,
+          y: -10,
+          // backgroundColor: Highcharts.color("#f7f7f7").setOpacity(0.85).get(),
+          borderWidth: 1,
+          shadow: true,
+          padding: 8,
+          // distance: 16,
+          borderRadius: 3,
+          borderColor: "blue",
+          style: {
+            color: "#333333",
+            fontSize: "12px",
+            whiteSpace: "nowrap",
+          },
+        },
+      },
+    ],
+  };
 
-    return (
-        <main className="w-full md:w-1/2 h-1/2 p-5 mt-10">
-            <Line options={options} ref={chartRef} data={data} />
-        </main>
-    );
+  return (
+    <main className="w-full p-5 mt-10 flex flex-col gap-y-5">
+      {/* <Line options={options} ref={chartRef} data={data} /> */}
+      <HighchartsReact highcharts={Highcharts} options={options1} />
+    </main>
+  );
 }
 
 // export default function App() {
