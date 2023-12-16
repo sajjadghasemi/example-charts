@@ -106,6 +106,8 @@ const Chart = () => {
     y: number;
   }>({ x: 0, y: 0 });
 
+  console.log(position);
+
   useEffect(() => {}, []);
 
   // const chartRef: any = useRef();
@@ -334,7 +336,7 @@ const Chart = () => {
         click: function (event: any) {
           setPosition({
             x: Number(Highcharts.numberFormat(event.xAxis[0].value, 2)),
-            y: Number(Highcharts.numberFormat(event.yAxis[0].value, 2)),
+            y: Number(Highcharts.dateFormat(event.yAxis[0].value, 2)),
           });
         },
       },
@@ -406,10 +408,62 @@ const Chart = () => {
     ],
   };
 
+  const options2: Highcharts.Options = {
+    title: {
+      text: "Corn vs wheat estimated production for 2020",
+      align: "left",
+    },
+    xAxis: {
+      categories: ["USA", "China", "Brazil", "EU", "India", "Russia"],
+      crosshair: true,
+      accessibility: {
+        description: "Countries",
+      },
+      gridLineWidth: 1,
+      lineWidth: 1,
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: "1000 metric tons (MT)",
+      },
+      gridLineWidth: 0,
+      lineWidth: 1,
+    },
+    plotOptions: {
+      column: {
+        pointPadding: 0.3,
+        borderWidth: 0,
+      },
+    },
+    series: [
+      {
+        point: {
+          events: {
+            click: function () {
+              alert("Category: " + this.category + ", value: " + this.y);
+            },
+          },
+        },
+        name: "Corn",
+        data: [406292, 260000, 107000, 68300, 27500, 14500],
+        type: "column",
+        color: "red",
+      },
+      {
+        name: "Wheat",
+        data: [51086, 136000, 5500, 141000, 107180, 77000],
+        type: "column",
+        color: "blue",
+      },
+    ],
+  };
+
   return (
     <main className="w-full p-5 mt-10 flex flex-col gap-y-5">
       {/* <Line options={options} ref={chartRef} data={data} /> */}
       <HighchartsReact highcharts={Highcharts} options={options1} />
+      <HighchartsReact highcharts={Highcharts} options={options2} />
     </main>
   );
 };
