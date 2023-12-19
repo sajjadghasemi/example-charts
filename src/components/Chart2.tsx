@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from "react";
 import Highcharts from "highcharts";
+import HighchartsMap from "highcharts/highmaps";
 import HighchartsMore from "highcharts/highcharts-more";
 import HighchartsReact from "highcharts-react-official";
 import Annotations from "highcharts/modules/annotations";
 import highchartsAccessibility from "highcharts/modules/accessibility";
 import Exporting from "highcharts/modules/exporting";
 import ExportData from "highcharts/modules/export-data";
+import highchartsMap from "highcharts/modules/map";
+import iranMap from "@highcharts/map-collection/countries/ir/ir-all.topo.json";
 
 if (typeof window !== `undefined`) {
   Exporting(Highcharts);
@@ -15,6 +18,7 @@ if (typeof window !== `undefined`) {
   Annotations(Highcharts);
   highchartsAccessibility(Highcharts);
   ExportData(Highcharts);
+  highchartsMap(Highcharts);
 }
 
 const Chart2 = () => {
@@ -23,7 +27,43 @@ const Chart2 = () => {
     y: number;
   }>({ x: 0, y: 0 });
 
-  useEffect(() => {}, []);
+  function getPersianCityName(key: string): string {
+    const cityNames: { [key: string]: string } = {
+      Alborz: "البرز",
+      Ardebil: "اردبیل",
+      Bushehr: "بوشهر",
+      "Chahar Mahall and Bakhtiari": "چهارمحال و بختیاری",
+      "East Azarbaijan": "آذربایجان شرقی",
+      Esfahan: "اصفهان",
+      Fars: "فارس",
+      Gilan: "گیلان",
+      Golestan: "گلستان",
+      Hamadan: "همدان",
+      Hormozgan: "هرمزگان",
+      Ilam: "ایلام",
+      Kerman: "کرمان",
+      Kermanshah: "کرمانشاه",
+      Khuzestan: "خوزستان",
+      "Kohgiluyeh and Buyer Ahmad": "کهگیلویه و بویر احمد",
+      Kordestan: "کردستان",
+      Lorestan: "لرستان",
+      Markazi: "مرکزی",
+      Mazandaran: "مازندران",
+      "North Khorasan": "خراسان شمالی",
+      Qazvin: "قزوین",
+      Qom: "قم",
+      "Razavi Khorasan": "خراسان رضوی",
+      Semnan: "سمنان",
+      "Sistan and Baluchestan": "سیستان و بلوچستان",
+      "South Khorasan": "خراسان جنوبی",
+      Tehran: "تهران",
+      "West Azarbaijan": "آذربایجان غربی",
+      Yazd: "یزد",
+      Zanjan: "زنجان",
+    };
+
+    return cityNames[key] || key;
+  }
 
   const options1: Highcharts.Options = {
     chart: {
@@ -55,40 +95,59 @@ const Chart2 = () => {
       ],
       tickmarkPlacement: "on",
       lineWidth: 0,
+      gridLineWidth: 2,
     },
 
     yAxis: {
       gridLineInterpolation: "polygon",
       lineWidth: 0,
+      gridLineWidth: 2,
       min: 0,
+      borderWidth: 4,
+      gridLineColor: "rgba(0,0,0,0.5)",
     },
 
     tooltip: {
-      shared: true,
       pointFormat:
         '<span style="color:{series.color}">{series.name}: <b>${point.y:,.0f}</b><br/>',
     },
 
     legend: {
-      align: "right",
+      align: "left",
       verticalAlign: "middle",
       layout: "vertical",
+      itemMarginBottom: 10,
+      itemStyle: {
+        fontFamily: "tahoma",
+        fontSize: "24",
+        fontWeight: "bold",
+      },
     },
 
     series: [
       {
         type: "area",
-        name: "Allocated Budget",
+        name: "همران اول",
         data: [43000, 19000, 60000, 35000, 17000, 10000],
         pointPlacement: "on",
         fillOpacity: 0.15,
+        color: "#56C5D0",
       },
       {
         type: "area",
-        name: "Actual Spending",
+        name: "رایتل",
         data: [50000, 39000, 42000, 31000, 26000, 40000],
         pointPlacement: "on",
         fillOpacity: 0.15,
+        color: "#B72E8B",
+      },
+      {
+        type: "area",
+        name: "ایرانسل",
+        data: [25000, 64440, 33000, 90000, 56000, 60000],
+        pointPlacement: "on",
+        fillOpacity: 0.15,
+        color: "#FAB823",
       },
     ],
 
@@ -113,61 +172,95 @@ const Chart2 = () => {
     },
   };
 
-  //   const options2: Highcharts.Options = {
-  //     title: {
-  //       text: "Corn vs wheat estimated production for 2020",
-  //       align: "left",
-  //     },
-  //     xAxis: {
-  //       categories: ["USA", "China", "Brazil", "EU", "India", "Russia"],
-  //       crosshair: true,
-  //       accessibility: {
-  //         description: "Countries",
-  //       },
-  //       gridLineWidth: 1,
-  //       lineWidth: 1,
-  //     },
-  //     yAxis: {
-  //       min: 0,
-  //       title: {
-  //         text: "1000 metric tons (MT)",
-  //       },
-  //       gridLineWidth: 0,
-  //       lineWidth: 1,
-  //     },
-  //     plotOptions: {
-  //       column: {
-  //         pointPadding: 0.3,
-  //         borderWidth: 0,
-  //       },
-  //     },
-  //     series: [
-  //       {
-  //         point: {
-  //           events: {
-  //             click: function () {
-  //               alert("Category: " + this.category + ", value: " + this.y);
-  //             },
-  //           },
-  //         },
-  //         name: "Corn",
-  //         data: [406292, 260000, 107000, 68300, 27500, 14500],
-  //         type: "column",
-  //         color: "red",
-  //       },
-  //       {
-  //         name: "Wheat",
-  //         data: [51086, 136000, 5500, 141000, 107180, 77000],
-  //         type: "column",
-  //         color: "blue",
-  //       },
-  //     ],
-  //   };
+  const options2: HighchartsMap.Options = {
+    chart: {
+      map: iranMap,
+    },
+
+    title: {
+      text: "",
+    },
+
+    colorAxis: {
+      showInLegend: false,
+    },
+
+    tooltip: {
+      formatter: function () {
+        if (this.key) {
+          return `نام شهر: ${getPersianCityName(this.key)}<br>مقدار: ${
+            this.point.value
+          }`;
+        }
+      },
+      borderRadius: 10,
+      borderWidth: 2,
+      borderColor: "black",
+      style: {
+        fontFamily: "tahoma",
+        width: 2000,
+      },
+    },
+
+    series: [
+      {
+        borderWidth: 1.5,
+        borderColor: "white",
+        type: "map",
+        data: [
+          { "hc-key": "ir-hg", value: 0, color: "#56C5D0" },
+          { "hc-key": "ir-bs", value: 0, color: "#B72E8B" },
+          { "hc-key": "ir-kb", value: 0, color: "#B72E8B" },
+          { "hc-key": "ir-fa", value: 0, color: "#56C5D0" },
+          { "hc-key": "ir-es", value: 0, color: "#B72E8B" },
+          { "hc-key": "ir-sm", value: 0, color: "#56C5D0" },
+          { "hc-key": "ir-go", value: 0, color: "#B72E8B" },
+          { "hc-key": "ir-mn", value: 0, color: "#B72E8B" },
+          { "hc-key": "ir-th", value: 20, color: "#FAB823" },
+          { "hc-key": "ir-mk", value: 10, color: "#FAB823" },
+          { "hc-key": "ir-ya", value: 0, color: "#FAB823" },
+          { "hc-key": "ir-cm", value: 0, color: "#FAB823" },
+          { "hc-key": "ir-kz", value: 0, color: "#FAB823" },
+          { "hc-key": "ir-lo", value: 0, color: "#FAB823" },
+          { "hc-key": "ir-il", value: 0, color: "#B72E8B" },
+          { "hc-key": "ir-ar", value: 0, color: "#FAB823" },
+          { "hc-key": "ir-qm", value: 0, color: "#FAB823" },
+          { "hc-key": "ir-hd", value: 0, color: "#FAB823" },
+          { "hc-key": "ir-za", value: 0, color: "#FAB823" },
+          { "hc-key": "ir-qz", value: 0, color: "#B72E8B" },
+          { "hc-key": "ir-wa", value: 0, color: "#FAB823" },
+          { "hc-key": "ir-ea", value: 0, color: "#FAB823" },
+          { "hc-key": "ir-bk", value: 0, color: "#FAB823" },
+          { "hc-key": "ir-gi", value: 0, color: "#B72E8B" },
+          { "hc-key": "ir-kd", value: 0, color: "#56C5D0" },
+          { "hc-key": "ir-kj", value: 0, color: "#FAB823" },
+          { "hc-key": "ir-kv", value: 0, color: "#56C5D0" },
+          { "hc-key": "ir-ks", value: 0, color: "#56C5D0" },
+          { "hc-key": "ir-sb", value: 0, color: "#56C5D0" },
+          { "hc-key": "ir-ke", value: 0, color: "#FAB823" },
+          { "hc-key": "ir-al", value: 0, color: "#56C5D0" },
+        ],
+        name: "Iran",
+        showInLegend: false,
+        cursor: "pointer",
+        states: {
+          hover: {
+            color: "rgba(0,0,0,0.1)",
+          },
+        },
+      },
+    ],
+  };
 
   return (
     <main className="w-full p-5 mt-10 flex flex-col gap-y-5">
       <HighchartsReact highcharts={Highcharts} options={options1} />
-      {/* <HighchartsReact highcharts={Highcharts} options={options2} /> */}
+      <HighchartsReact
+        constructorType={"mapChart"}
+        highcharts={Highcharts}
+        options={options2}
+      />
+      <div onClick={() => setPosition({ x: 1, y: 2 })}>SFSAF</div>
     </main>
   );
 };
