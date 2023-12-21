@@ -143,7 +143,7 @@ const Chart4 = () => {
       labels: {
         enabled: true,
         distance: 16,
-        padding:10
+        // padding:10
       },
       plotBands: [
         {
